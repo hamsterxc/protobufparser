@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-final class Reader {
+public final class Reader {
 
     public static byte[] readBytes(final InputStream input, final int count) throws IOException {
         final byte[] result = new byte[count];
@@ -52,7 +52,6 @@ final class Reader {
     }
 
     public static long readVarint(final InputStream input) throws IOException {
-        // todo: no ZigZag
         return convertToNumber(readVarintBytes(input));
     }
 

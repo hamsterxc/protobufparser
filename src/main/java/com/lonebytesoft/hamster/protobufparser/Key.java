@@ -21,9 +21,12 @@ class Key {
     }
 
     public static Key parse(final long value) throws IOException {
-        final WireType type = WireType.parse(value & 0x07)
-                .orElseThrow(() -> new IOException("Could not parse key type"));
+        final long typeCode = value & 0x07;
+        final WireType type = WireType.parse(typeCode)
+                .orElseThrow(() -> new IOException("Could not parse key type " + typeCode));
+
         final long tag = value >> 3;
+
         return new Key(type, tag);
     }
 

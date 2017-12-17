@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Optional;
 
-enum WireType {
+public enum WireType {
 
     VAR_INT(0) {
         @Override

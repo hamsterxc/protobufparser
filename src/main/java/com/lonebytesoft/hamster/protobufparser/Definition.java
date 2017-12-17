@@ -21,8 +21,7 @@ public class Definition {
         this.name = name;
         this.tag = tag;
         this.dataType = dataType;
-        this.children = Collections.unmodifiableMap(children.stream()
-                .collect(Collectors.toMap(Definition::getTag, Function.identity())));
+        this.children = Collections.unmodifiableMap(mapChildren(children));
     }
 
     public String getName() {
@@ -48,6 +47,11 @@ public class Definition {
                 ", tag=" + tag +
                 ", dataType=" + dataType +
                 '}';
+    }
+
+    public static Map<Long, Definition> mapChildren(final Collection<Definition> children) {
+        return children.stream()
+                .collect(Collectors.toMap(Definition::getTag, Function.identity()));
     }
 
 }
