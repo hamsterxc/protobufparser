@@ -7,6 +7,7 @@ import com.lonebytesoft.hamster.protobufparser.field.IntField;
 import com.lonebytesoft.hamster.protobufparser.field.ObjectField;
 import com.lonebytesoft.hamster.protobufparser.field.PackedBoolField;
 import com.lonebytesoft.hamster.protobufparser.field.PackedIntField;
+import com.lonebytesoft.hamster.protobufparser.field.PackedSignedIntField;
 import com.lonebytesoft.hamster.protobufparser.field.SignedIntField;
 import com.lonebytesoft.hamster.protobufparser.field.StringField;
 import org.junit.Assert;
@@ -117,6 +118,36 @@ public class ParserTest {
         Assert.assertEquals("i", ((StringField) fieldsTag1.get(1)).getValue());
     }
 
+    @Test
+    public void testObjectSmart() throws IOException {
+        final List<Field<?>> fields = parseSmart(data(
+                0x12, 0x08, 0x0A, 0x02, 0x01, 0x00, 0x12, 0x02, 0x65, 0x73,
+                0x18, 0x96, 0x01,
+                0x0A, 0x06, 0x08, 0x98, 0x01, 0x12, 0x01, 0x69
+        ), Collections.emptyList());
+
+        Assert.assertEquals(3, fields.size());
+
+        Assert.assertEquals(DataType.OBJECT, fields.get(0).getDataType());
+        final List<Field<?>> fieldsTag2 = ((ObjectField) fields.get(0)).getValue();
+        Assert.assertEquals(2, fieldsTag2.size());
+        Assert.assertEquals(DataType.PACKED_SIGNED_INT, fieldsTag2.get(0).getDataType());
+        Assert.assertEquals(Arrays.asList(-1L, 0L), ((PackedSignedIntField) fieldsTag2.get(0)).getValue());
+        Assert.assertEquals(DataType.STRING, fieldsTag2.get(1).getDataType());
+        Assert.assertEquals("es", ((StringField) fieldsTag2.get(1)).getValue());
+
+        Assert.assertEquals(DataType.SIGNED_INT, fields.get(1).getDataType());
+        Assert.assertEquals(75L, (long) ((SignedIntField) fields.get(1)).getValue());
+
+        Assert.assertEquals(DataType.OBJECT, fields.get(2).getDataType());
+        final List<Field<?>> fieldsTag1 = ((ObjectField) fields.get(2)).getValue();
+        Assert.assertEquals(2, fieldsTag1.size());
+        Assert.assertEquals(DataType.SIGNED_INT, fieldsTag1.get(0).getDataType());
+        Assert.assertEquals(76L, (long) ((SignedIntField) fieldsTag1.get(0)).getValue());
+        Assert.assertEquals(DataType.STRING, fieldsTag1.get(1).getDataType());
+        Assert.assertEquals("i", ((StringField) fieldsTag1.get(1)).getValue());
+    }
+
     @Test(expected = IOException.class)
     public void testInsufficientData() throws IOException {
         parse(data(0x0A, 0x02, 0x00), Collections.emptyList());
@@ -130,6 +161,10 @@ public class ParserTest {
 
     private List<Field<?>> parse(final byte[] data, final Collection<Definition> definitions) throws IOException {
         return parser.parse(new ByteArrayInputStream(data), definitions);
+    }
+
+    private List<Field<?>> parseSmart(final byte[] data, final Collection<Definition> definitions) throws IOException {
+        return parser.parse(new ByteArrayInputStream(data), definitions, true);
     }
 
 }
