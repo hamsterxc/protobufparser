@@ -47,7 +47,7 @@ public class FieldFactory {
             case SIGNED_INT:
                 final long valueSignedInt = Reader.convertToNumber(data);
                 // decoding ZigZag
-                return new SignedIntField(name, (valueSignedInt >> 1) * (1 - 2 * (valueSignedInt & 1)));
+                return new SignedIntField(name, (valueSignedInt + 1) / 2 * (1 - 2 * (valueSignedInt & 1)));
 
             case FIXED_32:
                 final int valueFixed32 = (int) Reader.convertToNumber(data);

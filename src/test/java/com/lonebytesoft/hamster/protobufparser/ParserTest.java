@@ -44,7 +44,7 @@ public class ParserTest {
 
         Assert.assertEquals(1, fields.size());
         Assert.assertEquals(DataType.SIGNED_INT, fields.get(0).getDataType());
-        Assert.assertEquals(-75L, (long) ((SignedIntField) fields.get(0)).getValue());
+        Assert.assertEquals(-76L, (long) ((SignedIntField) fields.get(0)).getValue());
     }
 
     @Test
