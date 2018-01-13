@@ -7,8 +7,8 @@ public class FloatField extends Field<Float> {
 
     private final float value;
 
-    public FloatField(final String name, final float value) {
-        super(name);
+    public FloatField(final long tag, final float value) {
+        super(tag);
         this.value = value;
     }
 

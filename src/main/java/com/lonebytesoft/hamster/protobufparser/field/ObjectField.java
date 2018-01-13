@@ -11,8 +11,8 @@ public class ObjectField extends Field<List<Field<?>>> {
 
     private final List<Field<?>> value;
 
-    public ObjectField(final String name, final List<Field<?>> value) {
-        super(name);
+    public ObjectField(final long tag, final List<Field<?>> value) {
+        super(tag);
         this.value = Collections.unmodifiableList(new ArrayList<>(value));
     }
 

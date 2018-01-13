@@ -7,8 +7,8 @@ public class Fixed64Field extends Field<Long> {
 
     private final long value;
 
-    public Fixed64Field(final String name, final long value) {
-        super(name);
+    public Fixed64Field(final long tag, final long value) {
+        super(tag);
         this.value = value;
     }
 

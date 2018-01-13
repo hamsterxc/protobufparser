@@ -10,8 +10,8 @@ public class PackedBoolField extends Field<List<Boolean>> {
 
     private final List<Boolean> value;
 
-    public PackedBoolField(final String name, final List<Boolean> value) {
-        super(name);
+    public PackedBoolField(final long tag, final List<Boolean> value) {
+        super(tag);
         this.value = Collections.unmodifiableList(new ArrayList<>(value));
     }
 

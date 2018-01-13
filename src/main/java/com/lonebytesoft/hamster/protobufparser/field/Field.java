@@ -4,14 +4,14 @@ import com.lonebytesoft.hamster.protobufparser.DataType;
 
 public abstract class Field<T> {
 
-    private final String name;
+    private final long tag;
 
-    protected Field(final String name) {
-        this.name = name;
+    protected Field(final long tag) {
+        this.tag = tag;
     }
 
-    public String getName() {
-        return name;
+    public long getTag() {
+        return tag;
     }
 
     public abstract DataType getDataType();
@@ -20,7 +20,7 @@ public abstract class Field<T> {
 
     @Override
     public String toString() {
-        return getName() + " = " + getValue();
+        return "#" + getTag() + " = " + getValue();
     }
 
 }

@@ -7,8 +7,8 @@ public class SignedIntField extends Field<Long> {
 
     private final Long value;
 
-    public SignedIntField(final String name, final Long value) {
-        super(name);
+    public SignedIntField(final long tag, final Long value) {
+        super(tag);
         this.value = value;
     }
 

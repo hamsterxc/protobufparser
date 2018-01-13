@@ -7,8 +7,8 @@ public class StringField extends Field<String> {
 
     private final String value;
 
-    public StringField(final String name, final String value) {
-        super(name);
+    public StringField(final long tag, final String value) {
+        super(tag);
         this.value = value;
     }
 

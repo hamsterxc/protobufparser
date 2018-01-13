@@ -7,8 +7,8 @@ public class Fixed32Field extends Field<Integer> {
 
     private final int value;
 
-    public Fixed32Field(final String name, final int value) {
-        super(name);
+    public Fixed32Field(final long tag, final int value) {
+        super(tag);
         this.value = value;
     }
 

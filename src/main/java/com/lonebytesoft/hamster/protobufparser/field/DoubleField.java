@@ -7,8 +7,8 @@ public class DoubleField extends Field<Double> {
 
     private final double value;
 
-    public DoubleField(final String name, final double value) {
-        super(name);
+    public DoubleField(final long tag, final double value) {
+        super(tag);
         this.value = value;
     }
 

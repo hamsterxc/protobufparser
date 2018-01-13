@@ -7,8 +7,8 @@ public class BoolField extends Field<Boolean> {
 
     private final boolean value;
 
-    public BoolField(final String name, final boolean value) {
-        super(name);
+    public BoolField(final long tag, final boolean value) {
+        super(tag);
         this.value = value;
     }
 

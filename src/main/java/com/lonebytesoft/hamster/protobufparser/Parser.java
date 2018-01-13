@@ -61,7 +61,7 @@ public class Parser {
             Definition definition;
             if(isGeneric) {
                 //throw new IOException("Definition not found for tag #" + key.getTag()));
-                definition = new Definition("<#" + key.getTag() + " " + wireType + ">", -1, GENERIC_DATA_TYPE.get(wireType));
+                definition = new Definition(null, key.getTag(), GENERIC_DATA_TYPE.get(wireType));
             } else {
                 definition = definitionKnown;
             }
@@ -81,7 +81,7 @@ public class Parser {
                         field = fieldFactory.buildField(definition, data);
 
                         if(definition.getDataType() == DataType.OBJECT) {
-                            field = buildObject(data, field.getName(), definition.getChildren(), isSmartVarLength);
+                            field = buildObject(data, field.getTag(), definition.getChildren(), isSmartVarLength);
                         }
 
                         if((definition.getDataType() == DataType.STRING)
@@ -97,7 +97,7 @@ public class Parser {
 
             if(!(isSmartVarLength && isGeneric) && (definition.getDataType() == DataType.OBJECT)) {
                 final byte[] data = ((BytesField) field).getValue();
-                field = buildObject(data, field.getName(), definition.getChildren(), isSmartVarLength);
+                field = buildObject(data, field.getTag(), definition.getChildren(), isSmartVarLength);
             }
 
             result.add(field);
@@ -106,10 +106,10 @@ public class Parser {
         return result;
     }
 
-    private Field<?> buildObject(final byte[] data, final String name, final Map<Long, Definition> definitions,
+    private Field<?> buildObject(final byte[] data, final long tag, final Map<Long, Definition> definitions,
                                  final boolean isSmartVarLength) throws IOException {
         final PushbackInputStream subInput = new PushbackInputStream(new ByteArrayInputStream(data));
-        return new ObjectField(name, parse(subInput, definitions, isSmartVarLength));
+        return new ObjectField(tag, parse(subInput, definitions, isSmartVarLength));
     }
 
     private boolean isNiceStringHeuristic(final String s) {

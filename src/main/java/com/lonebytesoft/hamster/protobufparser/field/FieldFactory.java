@@ -28,38 +28,38 @@ public class FieldFactory {
     }
     
     public Field<?> buildField(final Definition definition, final byte[] data) throws IOException {
-        final String name = definition.getName();
+        final long tag = definition.getTag();
         final DataType dataType = definition.getDataType();
 
         switch(dataType) {
             case DOUBLE:
                 final double valueDouble = Double.longBitsToDouble(Reader.convertToNumber(data));
-                return new DoubleField(name, valueDouble);
+                return new DoubleField(tag, valueDouble);
 
             case FLOAT:
                 final float valueFloat = Float.intBitsToFloat((int) Reader.convertToNumber(data));
-                return new FloatField(name, valueFloat);
+                return new FloatField(tag, valueFloat);
 
             case INT:
                 final long valueInt = Reader.convertToNumber(data);
-                return new IntField(name, valueInt);
+                return new IntField(tag, valueInt);
 
             case SIGNED_INT:
                 final long valueSignedInt = Reader.convertToNumber(data);
                 // decoding ZigZag
-                return new SignedIntField(name, (valueSignedInt + 1) / 2 * (1 - 2 * (valueSignedInt & 1)));
+                return new SignedIntField(tag, (valueSignedInt + 1) / 2 * (1 - 2 * (valueSignedInt & 1)));
 
             case FIXED_32:
                 final int valueFixed32 = (int) Reader.convertToNumber(data);
-                return new Fixed32Field(name, valueFixed32);
+                return new Fixed32Field(tag, valueFixed32);
 
             case FIXED_64:
                 final long valueFixed64 = Reader.convertToNumber(data);
-                return new Fixed64Field(name, valueFixed64);
+                return new Fixed64Field(tag, valueFixed64);
 
             case BOOL:
                 final boolean valueBool = Reader.convertToNumber(data) == 1;
-                return new BoolField(name, valueBool);
+                return new BoolField(tag, valueBool);
 
             case STRING:
                 final String valueString;
@@ -71,25 +71,25 @@ public class FieldFactory {
                     throw new IOException(e);
                 }
 
-                return new StringField(name, valueString);
+                return new StringField(tag, valueString);
 
             case BYTES:
-                return new BytesField(name, data);
+                return new BytesField(tag, data);
 
             case OBJECT:
-                return new BytesField(name, data);
+                return new BytesField(tag, data);
 
             case PACKED_INT:
                 final List<Long> valuePackedInt = readPacked(dataType.getPackedMemberDataType(), data);
-                return new PackedIntField(name, valuePackedInt);
+                return new PackedIntField(tag, valuePackedInt);
 
             case PACKED_SIGNED_INT:
                 final List<Long> valuePackedSignedInt = readPacked(dataType.getPackedMemberDataType(), data);
-                return new PackedSignedIntField(name, valuePackedSignedInt);
+                return new PackedSignedIntField(tag, valuePackedSignedInt);
 
             case PACKED_BOOL:
                 final List<Boolean> valuePackedBool = readPacked(dataType.getPackedMemberDataType(), data);
-                return new PackedBoolField(name, valuePackedBool);
+                return new PackedBoolField(tag, valuePackedBool);
 
             default:
                 throw new IllegalStateException("Can't build field for " + dataType);

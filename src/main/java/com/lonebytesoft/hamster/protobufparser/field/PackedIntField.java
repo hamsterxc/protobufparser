@@ -10,8 +10,8 @@ public class PackedIntField extends Field<List<Long>> {
 
     private final List<Long> value;
 
-    public PackedIntField(final String name, final List<Long> value) {
-        super(name);
+    public PackedIntField(final long tag, final List<Long> value) {
+        super(tag);
         this.value = Collections.unmodifiableList(new ArrayList<>(value));
     }
 

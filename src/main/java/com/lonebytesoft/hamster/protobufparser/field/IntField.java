@@ -7,8 +7,8 @@ public class IntField extends Field<Long> {
 
     private final Long value;
 
-    public IntField(final String name, final Long value) {
-        super(name);
+    public IntField(final long tag, final Long value) {
+        super(tag);
         this.value = value;
     }
 
