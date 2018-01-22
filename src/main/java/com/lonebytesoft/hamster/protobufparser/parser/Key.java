@@ -1,4 +1,6 @@
-package com.lonebytesoft.hamster.protobufparser;
+package com.lonebytesoft.hamster.protobufparser.parser;
+
+import com.lonebytesoft.hamster.protobufparser.WireType;
 
 import java.io.IOException;
 

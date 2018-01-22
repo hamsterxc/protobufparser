@@ -1,5 +1,7 @@
-package com.lonebytesoft.hamster.protobufparser;
+package com.lonebytesoft.hamster.protobufparser.parser;
 
+import com.lonebytesoft.hamster.protobufparser.DataType;
+import com.lonebytesoft.hamster.protobufparser.Definition;
 import com.lonebytesoft.hamster.protobufparser.field.BytesField;
 import com.lonebytesoft.hamster.protobufparser.field.Field;
 import com.lonebytesoft.hamster.protobufparser.field.FieldFactory;
@@ -98,6 +100,7 @@ public class ParserTest {
 
         Assert.assertEquals(3, fields.size());
 
+        // tag 2
         Assert.assertEquals(DataType.OBJECT, fields.get(0).getDataType());
         final List<Field<?>> fieldsTag2 = ((ObjectField) fields.get(0)).getValue();
         Assert.assertEquals(2, fieldsTag2.size());
@@ -106,9 +109,11 @@ public class ParserTest {
         Assert.assertEquals(DataType.BYTES, fieldsTag2.get(1).getDataType());
         Assert.assertArrayEquals(new byte[]{0x65, 0x73}, ((BytesField) fieldsTag2.get(1)).getValue());
 
+        // tag 3
         Assert.assertEquals(DataType.INT, fields.get(1).getDataType());
         Assert.assertEquals(150L, (long) ((IntField) fields.get(1)).getValue());
 
+        // tag 1
         Assert.assertEquals(DataType.OBJECT, fields.get(2).getDataType());
         final List<Field<?>> fieldsTag1 = ((ObjectField) fields.get(2)).getValue();
         Assert.assertEquals(2, fieldsTag1.size());
@@ -123,22 +128,26 @@ public class ParserTest {
         final List<Field<?>> fields = parseSmart(data(
                 0x12, 0x08, 0x0A, 0x02, 0x01, 0x00, 0x12, 0x02, 0x65, 0x73,
                 0x18, 0x96, 0x01,
-                0x0A, 0x06, 0x08, 0x98, 0x01, 0x12, 0x01, 0x69
+                0x0A, 0x06, 0x08, 0x98, 0x01, 0x12, 0x01, 0x69,
+                0x12, 0x04, 0x12, 0x02, 0x00, 0x01
         ), Collections.emptyList());
 
-        Assert.assertEquals(3, fields.size());
+        Assert.assertEquals(4, fields.size());
 
+        // tag 2
         Assert.assertEquals(DataType.OBJECT, fields.get(0).getDataType());
         final List<Field<?>> fieldsTag2 = ((ObjectField) fields.get(0)).getValue();
         Assert.assertEquals(2, fieldsTag2.size());
         Assert.assertEquals(DataType.PACKED_SIGNED_INT, fieldsTag2.get(0).getDataType());
         Assert.assertEquals(Arrays.asList(-1L, 0L), ((PackedSignedIntField) fieldsTag2.get(0)).getValue());
-        Assert.assertEquals(DataType.STRING, fieldsTag2.get(1).getDataType());
-        Assert.assertEquals("es", ((StringField) fieldsTag2.get(1)).getValue());
+        Assert.assertEquals(DataType.PACKED_SIGNED_INT, fieldsTag2.get(1).getDataType());
+        Assert.assertEquals(Arrays.asList(-51L, -58L), ((PackedSignedIntField) fieldsTag2.get(1)).getValue());
 
+        // tag 3
         Assert.assertEquals(DataType.SIGNED_INT, fields.get(1).getDataType());
         Assert.assertEquals(75L, (long) ((SignedIntField) fields.get(1)).getValue());
 
+        // tag 1
         Assert.assertEquals(DataType.OBJECT, fields.get(2).getDataType());
         final List<Field<?>> fieldsTag1 = ((ObjectField) fields.get(2)).getValue();
         Assert.assertEquals(2, fieldsTag1.size());
@@ -146,6 +155,13 @@ public class ParserTest {
         Assert.assertEquals(76L, (long) ((SignedIntField) fieldsTag1.get(0)).getValue());
         Assert.assertEquals(DataType.STRING, fieldsTag1.get(1).getDataType());
         Assert.assertEquals("i", ((StringField) fieldsTag1.get(1)).getValue());
+
+        // tag 2
+        Assert.assertEquals(DataType.OBJECT, fields.get(3).getDataType());
+        final List<Field<?>> fieldsTag2Another = ((ObjectField) fields.get(3)).getValue();
+        Assert.assertEquals(1, fieldsTag2Another.size());
+        Assert.assertEquals(DataType.PACKED_SIGNED_INT, fieldsTag2Another.get(0).getDataType());
+        Assert.assertEquals(Arrays.asList(0L, -1L), ((PackedSignedIntField) fieldsTag2Another.get(0)).getValue());
     }
 
     @Test(expected = IOException.class)
