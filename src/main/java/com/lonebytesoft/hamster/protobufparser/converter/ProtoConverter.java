@@ -183,8 +183,7 @@ public class ProtoConverter {
 
         result
                 .append(indent)
-                .append(definition.isRepeated() ? "repeated" : "optional")
-                .append(" ")
+                .append(definition.isRepeated() ? "repeated " : "")
                 .append(typeName)
                 .append(" ")
                 .append(name)
