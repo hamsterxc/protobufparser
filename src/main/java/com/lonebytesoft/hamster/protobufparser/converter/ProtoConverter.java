@@ -27,7 +27,7 @@ public class ProtoConverter {
         final Collection<ProtobufDefinition> fieldsProtobufDefinitions = fieldsToProtobufDefinitions(fields);
 
         final Collection<ProtobufDefinition> protobufDefinitions = includeGeneric
-                ? merge(definitionsProtobufDefinitions, fieldsProtobufDefinitions)
+                ? merge(definitionsProtobufDefinitions, fieldsProtobufDefinitions, false)
                 : modify(definitionsProtobufDefinitions, fieldsProtobufDefinitions);
 
         return toProtoInternal(rootName, protobufDefinitions);
@@ -63,7 +63,7 @@ public class ProtoConverter {
 
                     if(isCompound(field.getDataType())) {
                         return new ProtobufDefinition(true, definition.getType(), definition.getName(), definition.getTag(),
-                                merge(definition.getChildren(), fieldsToProtobufDefinitions(((ObjectField) field).getValue())));
+                                merge(definition.getChildren(), fieldsToProtobufDefinitions(((ObjectField) field).getValue()), true));
                     } else {
                         return new ProtobufDefinition(true, definition.getType(), definition.getName(), definition.getTag());
                     }
@@ -74,7 +74,8 @@ public class ProtoConverter {
         return definitions.values();
     }
 
-    private Collection<ProtobufDefinition> merge(final Collection<ProtobufDefinition> first, final Collection<ProtobufDefinition> second) {
+    private Collection<ProtobufDefinition> merge(final Collection<ProtobufDefinition> first, final Collection<ProtobufDefinition> second,
+                                                 final boolean considerFirstRepeated) {
         final Map<Long, ProtobufDefinition> definitions = first.stream()
                 .collect(Collectors.toMap(ProtobufDefinition::getTag, Function.identity()));
         
@@ -85,12 +86,12 @@ public class ProtoConverter {
                 } else {
                     validateDefinitions(definition, definitionFirst);
 
+                    final boolean isRepeated = definition.isRepeated() || considerFirstRepeated && definitionFirst.isRepeated();
                     if(definition.isCompound()) {
-                        return new ProtobufDefinition(definition.isRepeated(), definitionFirst.getType(),
-                                definitionFirst.getName(), definitionFirst.getTag(), merge(definitionFirst.getChildren(), definition.getChildren()));
+                        return new ProtobufDefinition(isRepeated, definitionFirst.getType(), definitionFirst.getName(), definitionFirst.getTag(),
+                                merge(definitionFirst.getChildren(), definition.getChildren(), considerFirstRepeated));
                     } else {
-                        return new ProtobufDefinition(definition.isRepeated(), definitionFirst.getType(),
-                                definitionFirst.getName(), definitionFirst.getTag());
+                        return new ProtobufDefinition(isRepeated, definitionFirst.getType(), definitionFirst.getName(), definitionFirst.getTag());
                     }
                 }
             });
